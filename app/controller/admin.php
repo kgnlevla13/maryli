@@ -56,6 +56,26 @@ $menus = [
 			'fill' => 'fill-support-tickets'
 		]
 	],
+	// Mevcut menü dizisinde, "Events" menüsünden sonra ekleyin:
+	[
+		'url' => 'javascript:void(0)',
+		'title' => 'Subscribers',
+		'icon' => [
+			'stroke' => 'stroke-user',
+			'fill' => 'fill-user'
+		],
+		'submenu' => [
+			[
+				'url' => 'newsletter',
+				'title' => 'Newsletter Subscribers'
+			],
+			[
+				'url' => 'ebook-downloads',
+				'title' => 'Ebook Downloads'
+			]
+		],
+		'header' => 'Marketing'
+	],
 	[
 		'url' => 'homepagesliders',
 		'title' => 'Home Sliders',
@@ -152,26 +172,6 @@ $menus = [
 				'title' => 'Add Event Post'
 			]
 ]
-	],
-	// Mevcut menü dizisinde, "Events" menüsünden sonra ekleyin:
-	[
-		'url' => 'javascript:void(0)',
-		'title' => 'Subscribers',
-		'icon' => [
-			'stroke' => 'stroke-user',
-			'fill' => 'fill-user'
-		],
-		'submenu' => [
-			[
-				'url' => 'newsletter',
-				'title' => 'Newsletter Subscribers'
-			],
-			[
-				'url' => 'ebook-downloads',
-				'title' => 'Ebook Downloads'
-			]
-		],
-		'header' => 'Marketing'
 	]
 
 ];

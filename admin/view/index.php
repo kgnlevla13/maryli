@@ -14,89 +14,102 @@
           </div>
         </div>
       </div>
-      <div class="col-xl-3 col-md-6 proorder-xl-1 proorder-md-1">
-        <div class="card">
-          <div class="card-body">
-            <div class="card-header card-no-border pb-0">
-              <div class="header-top daily-revenue-card">
-                <h4>Total Visitors</h4>
-              </div>
-            </div>
-            <div class="card-body pb-0 total-sells">
-              <div class="d-flex align-items-center gap-3">
-                <div class="flex-shrink-0"><i data-feather="pie-chart"></i></div>
-                <div class="flex-grow-1">
-                  <div class="d-flex align-items-center gap-2">
-                    <h2>12,463</h2>
-                  </div>
-                </div>
-              </div>
-              <div id="admissionRatio"></div>
+<!-- Bu kod admin/view/index.php dosyasındaki widget-grid kısmını değiştirir -->
+
+<div class="col-xl-3 col-md-6 proorder-xl-1 proorder-md-1">
+  <div class="card">
+    <div class="card-body">
+      <div class="card-header card-no-border pb-0">
+        <div class="header-top daily-revenue-card">
+          <h4>Total Blog Views</h4>
+        </div>
+      </div>
+      <div class="card-body pb-0 total-sells">
+        <div class="d-flex align-items-center gap-3">
+          <div class="flex-shrink-0"><i data-feather="eye"></i></div>
+          <div class="flex-grow-1">
+            <div class="d-flex align-items-center gap-2">
+              <h2><?= number_format($stats['total_blog_views']) ?></h2>
+              <span class="f-12 f-w-500 text-success">+<?= $stats['monthly_blogs'] ?> this month</span>
             </div>
           </div>
         </div>
+        <div id="admissionRatio"></div>
       </div>
-      <div class="col-xl-3 col-md-6 proorder-xl-1 proorder-md-1">
-        <div class="card">
-          <div class="card-body">
-            <div class="card-header card-no-border pb-0">
-              <div class="header-top daily-revenue-card">
-                <h4>Daily Visitors</h4>
-              </div>
-            </div>
-            <div class="card-body pb-0 total-sells-4">
-              <div class="d-flex align-items-center gap-3">
-                <div class="flex-shrink-0"><i data-feather="user-plus"></i></div>
-                <div class="flex-grow-1">
-                  <div class="d-flex align-items-center gap-2">
-                    <h2>463</h2>
-                  </div>
-                </div>
-              </div>
-              <div id="daily-revenue"></div>
+    </div>
+  </div>
+</div>
+
+<div class="col-xl-3 col-md-6 proorder-xl-1 proorder-md-1">
+  <div class="card">
+    <div class="card-body">
+      <div class="card-header card-no-border pb-0">
+        <div class="header-top daily-revenue-card">
+          <h4>Newsletter Subscribers</h4>
+        </div>
+      </div>
+      <div class="card-body pb-0 total-sells-4">
+        <div class="d-flex align-items-center gap-3">
+          <div class="flex-shrink-0"><i data-feather="mail"></i></div>
+          <div class="flex-grow-1">
+            <div class="d-flex align-items-center gap-2">
+              <h2><?= number_format($stats['total_subscribers']) ?></h2>
             </div>
           </div>
         </div>
+        <div id="daily-revenue"></div>
       </div>
-      <div class="col-xl-4 col-sm-6">
-        <div class="card">
-          <div class="card-body student">
-            <div class="d-flex gap-2 align-items-end">
-              <div class="flex-grow-1">
-                <h2>not available!</h2>
-                <p class="mb-0 text-truncate">Total Followers</p>
-              </div>
-              <div class="flex-shrink-0"><img src="<?= admin_public_url('assets/images/dashboard/social/facebook.png') ?>" alt="facebook icon"></div>
-            </div>
-          </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-xl-4 col-sm-6">
+  <div class="card">
+    <div class="card-body student">
+      <div class="d-flex gap-2 align-items-end">
+        <div class="flex-grow-1">
+          <h2><?= number_format($stats['total_ebook_downloads']) ?></h2>
+          <p class="mb-0 text-truncate">E-book Downloads</p>
+        </div>
+        <div class="flex-shrink-0">
+          <i data-feather="download" style="width: 32px; height: 32px;"></i>
         </div>
       </div>
-      <div class="col-xl-4 col-sm-6">
-        <div class="card">
-          <div class="card-body student-3">
-            <div class="d-flex gap-2 align-items-end">
-              <div class="flex-grow-1">
-                <h2>not available!</h2>
-                <p class="mb-0 text-truncate">Total Followers</p>
-              </div>
-              <div class="flex-shrink-0"><img src="<?= admin_public_url('assets/images/dashboard/social/instagram.png') ?>" alt="instagram icon"></div>
-            </div>
-          </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-xl-4 col-sm-6">
+  <div class="card">
+    <div class="card-body student-3">
+      <div class="d-flex gap-2 align-items-end">
+        <div class="flex-grow-1">
+          <h2><?= number_format($stats['total_class_views']) ?></h2>
+          <p class="mb-0 text-truncate">Total Class Views</p>
+        </div>
+        <div class="flex-shrink-0">
+          <i data-feather="users" style="width: 32px; height: 32px;"></i>
         </div>
       </div>
-      <div class="col-xl-4 col-sm-6">
-        <div class="card">
-          <div class="card-body student-4">
-            <div class="d-flex gap-2 align-items-end">
-              <div class="flex-grow-1">
-                <h2>not available!</h2>
-                <p class="mb-0 text-truncate">Total Followers</p>
-              </div>
-              <div class="flex-shrink-0"><img src="<?= admin_public_url('assets/images/dashboard/social/youtube.png') ?>" alt="youtube icon"></div>
-            </div>
-          </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-xl-4 col-sm-6">
+  <div class="card">
+    <div class="card-body student-4">
+      <div class="d-flex gap-2 align-items-end">
+        <div class="flex-grow-1">
+          <h2><?= number_format($stats['total_event_views']) ?></h2>
+          <p class="mb-0 text-truncate">Total Event Views</p>
+        </div>
+        <div class="flex-shrink-0">
+          <i data-feather="calendar" style="width: 32px; height: 32px;"></i>
         </div>
       </div>
+    </div>
+  </div>
+</div>
       <!-- The maximum number of listings required for blogs is twenty. (max 5 pages) -->
       <div class="col-xl-6 proorder-xl-5 box-col-7 proorder-md-5">
         <div class="card">
