@@ -41,9 +41,9 @@
 								</div>
 							</div>
 							<div class="btn-showcase text-end mb-3">
-								<button class="btn btn-primary" type="submit">Update About Post</button>
-								<a href="<?= admin_url('aboutlist') ?>" class="btn btn-secondary">Cancel</a>
-							</div>
+    <button class="btn btn-primary" type="submit">Update About Post</button>
+    <a href="<?= admin_url('aboutlist') ?>" class="btn btn-secondary">Cancel</a>
+</div>
 						</form>
 
 					</div>
@@ -58,59 +58,105 @@
 
 <script type="text/javascript">
 
-	Dropzone.autoDiscover = false;
+    Dropzone.autoDiscover = false;
 
-	var newAboutId = <?= $row['id'] ?>;
+    var newAboutId = <?= $row['id'] ?>;
 
-	var myDropzone = new Dropzone("#aboutImageUpload", {
-		url: api_url + "/editaboutpageimage",
-		maxFiles: 1,
-		acceptedFiles: "image/*",
-		addRemoveLinks: true,
-		autoProcessQueue: false,
-		init: function () {
+    var myDropzone = new Dropzone("#aboutImageUpload", {
+        url: api_url + "/editaboutpageimage",
+        maxFiles: 1,
+        acceptedFiles: "image/*",
+        addRemoveLinks: true,
+        autoProcessQueue: false,
+        init: function () {
 
-			this.on("thumbnail", function(file, dataUrl) {
-				$('.dz-image').last().find('img').attr({width: '100%', height: '100%'});
-			}),
-			this.on("success", function(file) {
-				$('.dz-image').css({"width":"100%", "height":"auto"});
-			});
+            this.on("thumbnail", function(file, dataUrl) {
+                $('.dz-image').last().find('img').attr({width: '100%', height: '100%'});
+            }),
+            this.on("success", function(file) {
+                $('.dz-image').css({"width":"100%", "height":"auto"});
+            });
 
-			var thisDropzone = this;
-			var mockFile = { name: 'Name Image', size: 12345, type: 'image/jpeg' };
-			thisDropzone.emit("addedfile", mockFile);
-			thisDropzone.emit("success", mockFile);
-			thisDropzone.emit("thumbnail", mockFile, "<?= admin_public_url('assets/images/') . $row['aboutimage'] ?>")
-			this.on("maxfilesexceeded", function(file){
-				this.removeFile(file);
-				alert("No more files please!");
-			});
+            var thisDropzone = this;
+            var mockFile = { name: 'Name Image', size: 12345, type: 'image/jpeg' };
+            thisDropzone.emit("addedfile", mockFile);
+            thisDropzone.emit("success", mockFile);
+            thisDropzone.emit("thumbnail", mockFile, "<?= admin_public_url('assets/images/') . $row['aboutimage'] ?>")
+            this.on("maxfilesexceeded", function(file){
+                this.removeFile(file);
+                alert("No more files please!");
+            });
 
-			this.on("sending", function (file, xhr, formData) {
-            // FormData'ya newAboutId'yi ekleyin
-				formData.append('newAboutId', newAboutId);
-			});
-			
-		}
-	});
+            this.on("sending", function (file, xhr, formData) {
+                formData.append('newAboutId', newAboutId);
+            });
 
-	function uploadAboutImage() {
-		myDropzone.processQueue();
-		myDropzone.on("success", function(file, response) {
-			Swal.fire({
-				icon: 'success',
-				title: 'success!',
-				text: response,
-			});
-		});
-		myDropzone.on("error", function(file, errorMessage) {
-			Swal.fire({
-				icon: 'error',
-				title: 'error!',
-				text: errorMessage,
-			});
-		});
-	}
+            this.on("success", function (file, response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: response,
+                }).then(() => {
+                    window.location.href = site_url + 'admin/aboutlist';
+                });
+            });
+
+            this.on("error", function (file, errorMessage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: errorMessage,
+                });
+            });
+        }
+    });
+
+    // FORM SUBMIT EVENT'İNİ EKLE
+    $("#aboutEditForm").on("submit", function (e) {
+        e.preventDefault();
+
+        // CKEditor içeriğini güncelle
+        for (instance in CKEDITOR.instances) {
+            CKEDITOR.instances[instance].updateElement();
+        }
+
+        // AJAX ile form gönder
+        $.post(api_url + "/aboutedit", $(this).serialize(), null, "json")
+        .done(response => {
+            if (response.error) {
+                Swal.fire({ 
+                    icon: 'error', 
+                    title: 'Error!', 
+                    text: response.error 
+                });
+            } else {
+                // Eğer yeni resim yüklendiyse
+                if (myDropzone.files.length > 0) {
+                    myDropzone.processQueue();
+                } else {
+                    // Resim yoksa direkt success göster ve yönlendir
+                    Swal.fire({ 
+                        icon: 'success', 
+                        title: 'Success!', 
+                        text: response.success 
+                    }).then(() => {
+                        window.location.href = site_url + 'admin/aboutlist';
+                    });
+                }
+            }
+        })
+        .fail(function(xhr, status, error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'AJAX Error!',
+                text: 'Request failed: ' + error
+            });
+        });
+    });
+
+    // uploadAboutImage function'ını da düzenle
+    function uploadAboutImage() {
+        myDropzone.processQueue();
+    }
 
 </script>

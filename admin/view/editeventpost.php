@@ -91,7 +91,7 @@
 								</div>
 							</div>
 							<div class="btn-showcase text-end">
-								<button class="btn btn-primary" onclick="uploadClassImage()" type="submit">Save</button>
+								<button class="btn btn-primary" type="submit">Save Event</button>
 							</div>
 						</form>
 					</div>
@@ -111,7 +111,7 @@
 	var newEventId = <?= json_encode($row['event_id']) ?>;
 
 	var myDropzone = new Dropzone("#multiFileUpload", {
-		url: api_url + "/eventpageimage",
+		url: api_url + "/editeventpageimage",
 		maxFiles: 3,
 		parallelUploads: 3,
 		acceptedFiles: "image/*",
@@ -119,49 +119,120 @@
 		autoProcessQueue: false,
 		uploadMultiple: true,
 
-    init: function () {
-      this.on("thumbnail", function(file, dataUrl) {
-        $('.dz-image').last().find('img').attr({width: '100%', height: '100%'});
-      });
+		init: function () {
+			this.on("thumbnail", function(file, dataUrl) {
+				$('.dz-image').last().find('img').attr({width: '100%', height: '100%'});
+			});
 
-      this.on("success", function(file) {
-        $('.dz-image').css({"width":"100%", "height":"auto"});
-      });
+			this.on("success", function(file) {
+				$('.dz-image').css({"width":"100%", "height":"auto"});
+			});
 
-      var thisDropzone = this;
-      var mockFile = { name: 'Name Image', size: 12345, type: 'image/jpeg' };
-      thisDropzone.emit("addedfile", mockFile);
-      thisDropzone.emit("success", mockFile);
-      thisDropzone.emit("thumbnail", mockFile, "<?= admin_public_url('assets/images/') . $row['event_image_1'] ?>");
+			// Mevcut resimleri göster
+			var thisDropzone = this;
+			<?php if(!empty($row['event_image_1'])): ?>
+			var mockFile1 = { name: 'Event Image 1', size: 12345, type: 'image/jpeg' };
+			thisDropzone.emit("addedfile", mockFile1);
+			thisDropzone.emit("success", mockFile1);
+			thisDropzone.emit("thumbnail", mockFile1, "<?= admin_public_url('assets/images/') . $row['event_image_1'] ?>");
+			<?php endif; ?>
 
-      this.on("maxfilesexceeded", function(file){
-        this.removeFile(file);
-        alert("No more files please!");
-      });
+			<?php if(!empty($row['event_image_2'])): ?>
+			var mockFile2 = { name: 'Event Image 2', size: 12345, type: 'image/jpeg' };
+			thisDropzone.emit("addedfile", mockFile2);
+			thisDropzone.emit("success", mockFile2);
+			thisDropzone.emit("thumbnail", mockFile2, "<?= admin_public_url('assets/images/') . $row['event_image_2'] ?>");
+			<?php endif; ?>
 
-      this.on("sending", function (file, xhr, formData) {
-        // FormData'ya newEventId'yi ekleyin
-        formData.append('newEventId', newEventId);
-      });
-    }
-  });
+			<?php if(!empty($row['event_image_3'])): ?>
+			var mockFile3 = { name: 'Event Image 3', size: 12345, type: 'image/jpeg' };
+			thisDropzone.emit("addedfile", mockFile3);
+			thisDropzone.emit("success", mockFile3);
+			thisDropzone.emit("thumbnail", mockFile3, "<?= admin_public_url('assets/images/') . $row['event_image_3'] ?>");
+			<?php endif; ?>
 
-  function uploadClassImage() {
-    myDropzone.processQueue();
-    myDropzone.on("success", function(file, response) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Success!',
-        text: response,
-      });
-    });
-    myDropzone.on("error", function(file, errorMessage) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: errorMessage,
-      });
-    });
-  }
+			this.on("maxfilesexceeded", function(file){
+				this.removeFile(file);
+				alert("No more files please!");
+			});
+
+			this.on("sending", function (file, xhr, formData) {
+				formData.append('newEventId', newEventId);
+			});
+
+			this.on("success", function (file, response) {
+				Swal.fire({
+					icon: 'success',
+					title: 'Success!',
+					text: 'Images uploaded successfully!',
+				});
+			});
+
+			this.on("error", function (file, errorMessage) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Error!',
+					text: errorMessage,
+				});
+			});
+		}
+	});
+
+	// Form submit olayını düzelt
+	$("#events").on("submit", function(e) {
+		e.preventDefault();
+
+		// CKEditor içeriğini güncelle
+		for (instance in CKEDITOR.instances) {
+			CKEDITOR.instances[instance].updateElement();
+		}
+
+		// Önce form verilerini kaydet
+		$.post(api_url + "/eventedit", $(this).serialize(), null, "json").done(response => {
+			if (response.error) {
+				Swal.fire({ 
+					icon: 'error', 
+					title: 'Error!', 
+					text: response.error 
+				});
+			} else {
+				// Başarılı ise mesaj göster
+				Swal.fire({ 
+					icon: 'success', 
+					title: 'Success!', 
+					text: response.success 
+				});
+
+				// Eğer yeni dosyalar seçildiyse onları da yükle
+				if (myDropzone.files.length > 0) {
+					myDropzone.processQueue();
+				}
+
+				// 2 saniye sonra event list sayfasına yönlendir
+				setTimeout(function() {
+					window.location.href = site_url + 'admin/eventlist';
+				}, 2000);
+			}
+		}).fail(function() {
+			Swal.fire({ 
+				icon: 'error', 
+				title: 'Error!', 
+				text: 'An error occurred while saving.' 
+			});
+		});
+	});
+
+	// Ayrı bir fonksiyon ile sadece resim yükleme
+	function uploadEventImages() {
+		if (myDropzone.files.length > 0) {
+			myDropzone.processQueue();
+		} else {
+			Swal.fire({
+				icon: 'info',
+				title: 'Info',
+				text: 'No new images to upload.'
+			});
+		}
+	}
 
 </script>

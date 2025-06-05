@@ -4,19 +4,23 @@ $id = post("id");
 
 if ($data = form_control()) {
 
-	$data['id'] = $id;
+    $data['id'] = $id;
 
-	$query = $db->update("aboutpage")
-	->where("id",intval($id))
-	->set($data);
+    $query = $db->update("aboutpage")
+    ->where("id",intval($id))
+    ->set($data);
 
-	if ($query) {
-		$json["success"] = "Update Successful! You are being redirected...";
-	}
-	else{
-		$json["error"] = "There is a problem. Try again!";
-	}
+    if ($query) {
+        $json["success"] = "Update Successful! You are being redirected...";
+    }
+    else{
+        $json["error"] = "There is a problem. Try again!";
+    }
 }
 else{
-	$json["error"] = "Please fill in all fields.";
+    $json["error"] = "Please fill in all fields.";
 }
+
+// Bu satırı ekle
+echo json_encode($json);
+exit;
