@@ -9,7 +9,7 @@ $totalRecord = $db->from("subscribes")
     ->select("count('id') as total")
     ->total();
 
-$pageLimit = 20;
+$pageLimit = 1000;
 $pageParam = "page";
 $pagination = $db->pagination($totalRecord, $pageLimit, $pageParam);
 

@@ -215,7 +215,7 @@ document.getElementById('searchDownloads').addEventListener('keyup', function() 
     const rows = document.querySelectorAll('#downloads-table tbody tr');
     
     rows.forEach(row => {
-        const name = row.cells[2].textContent.toLowerCase();
+        const name = row.cells[1].textContent.toLowerCase();
         if (name.includes(filter)) {
             row.style.display = '';
         } else {

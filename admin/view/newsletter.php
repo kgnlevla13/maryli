@@ -175,7 +175,7 @@ document.getElementById('searchSubscribers').addEventListener('keyup', function(
     const rows = document.querySelectorAll('#subscribers-table tbody tr');
     
     rows.forEach(row => {
-        const email = row.cells[2].textContent.toLowerCase();
+        const email = row.cells[1].textContent.toLowerCase();
         if (email.includes(filter)) {
             row.style.display = '';
         } else {

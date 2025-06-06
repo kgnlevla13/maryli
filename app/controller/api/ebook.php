@@ -21,7 +21,8 @@ if ($data = form_control()) {
             'name' => $data['name'],
             'email' => $data['email'],
             'download_date' => date('Y-m-d H:i:s'),
-            'ip_address' => $_SERVER['REMOTE_ADDR']
+            'ip_address' => $_SERVER['REMOTE_ADDR'],
+            'email_sent' => 1
         ];
         
         $query = $db->insert("ebook_downloads")
