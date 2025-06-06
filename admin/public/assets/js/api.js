@@ -19,7 +19,7 @@ function delete_post(selectedCategory = null){
 			title: 'Are You Sure You Want to Delete?',
 			text: "If you delete it, you cannot undo this action!",
 			icon: 'warning',
-			cancelButtonText: "Give up!",
+			cancelButtonText: "Cancel!",
 			showCancelButton: true,
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
@@ -32,19 +32,76 @@ function delete_post(selectedCategory = null){
 				var column = $(this).attr('column');
 				var delfade = $(this).closest('.col-md-6.col-xxl-2.box-col-6');
 
+				// Show loading message
+				Swal.fire({
+					title: 'Deleting...',
+					text: 'Please wait while we delete the record.',
+					allowOutsideClick: false,
+					showConfirmButton: false,
+					onBeforeOpen: () => {
+						Swal.showLoading();
+					}
+				});
+
 				$.post(api_url + "/delete-post",{
 					"id" :delete_id,
 					"table" :table,
-					"column" :column}, function (response){
+					"column" :column
+				}, function (response){
 
+					try {
+						// Parse response if it's a string
+						const result = typeof response === 'string' ? JSON.parse(response) : response;
+						
+						if (result.success) {
+							Swal.fire({
+								icon: 'success',
+								title: 'Deleted!',
+								text: 'The record has been deleted successfully.',
+								timer: 1500,
+								showConfirmButton: false
+							}).then(() => {
+								// Auto reload the page after successful deletion
+								window.location.reload();
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								title: 'Error!',
+								text: result.error || 'A problem occurred while deleting.'
+							});
+						}
+					} catch (e) {
+						// Fallback for old response format
 						if (response) {
-							Swal.fire('Congratulations','Deletion Successful.','success')
-							delfade.hide(500);
+							Swal.fire({
+								icon: 'success',
+								title: 'Congratulations',
+								text: 'Deletion Successful.',
+								timer: 1500,
+								showConfirmButton: false
+							}).then(() => {
+								// Auto reload the page after successful deletion
+								window.location.reload();
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								title: 'Error',
+								text: 'A problem occurred while deleting.'
+							});
 						}
-						else{
-							Swal.fire('Error','A problem occurred while deleting.','error');
-						}
+					}
+
+				}).fail(function(xhr, status, error) {
+					// Handle AJAX errors
+					console.error('AJAX Error:', error);
+					Swal.fire({
+						icon: 'error',
+						title: 'Network Error!',
+						text: 'Could not connect to server. Please try again.'
 					});
+				});
 
 			}
 		})
